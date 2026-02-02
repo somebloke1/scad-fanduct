@@ -46,7 +46,7 @@ base_hull_spacing_factor = 1.0;      // Cosine acceleration factor (>1.0 = more 
 base_fillet_radius = 70;             // Fillet radius at base (circular)
 terminus_fillet_radius = 10;         // Fillet radius at intermediate terminus
 terminus_left_extension_factor = 0.20;  // Left edge extension as fraction of terminus max X dimension
-terminus_y_offset = 15;              // Y-axis offset at terminus (dimension along Y axis)
+terminus_y_offset = 23.5;            // Y-axis offset at terminus (aligns high-Y edge with base edge at Y=70mm)
 
 // Second hull: intermediate to egress
 egress_hull_profile_count = 11;      // Number of intermediate profiles in second hull segment
@@ -195,12 +195,12 @@ module hull_base_to_intermediate() {
     }
 }
 
-// Hull segment: intermediate to egress
+// Hull segment: intermediate to egress (direct hull, no intermediates)
 module hull_intermediate_to_egress() {
     color("orange", 0.7)
     hull() {
-        shell_base_to_intermediate_profile(1);  // Use morphed terminus profile
-        shell_egress();
+        shell_base_to_intermediate_profile(1);  // Midpoint terminus (fixed)
+        shell_egress();                          // Egress target (fixed)
     }
 }
 
