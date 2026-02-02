@@ -44,7 +44,7 @@ base_hull_spacing_factor = 1.0;      // Cosine acceleration factor (>1.0 = more 
 base_fillet_radius = 70;             // Fillet radius at base (circular)
 terminus_fillet_radius = 10;         // Fillet radius at intermediate terminus
 terminus_left_extension_factor = 0.20;  // Left edge extension as fraction of terminus max X dimension
-terminus_y_offset = 10;              // Y-axis offset at terminus (dimension along Y axis)
+terminus_y_offset = 15;              // Y-axis offset at terminus (dimension along Y axis)
 
 // Egress orientation (perpendicular to base = rotated 90° around Y axis)
 egress_rotation = 90;  // Degrees around Y axis
