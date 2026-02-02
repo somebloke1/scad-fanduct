@@ -1,0 +1,34 @@
+# OpenSCAD build artifacts
+*.stl
+*.3mf
+*.amf
+*.off
+
+# Rendered images (build steps/test renders)
+*.png
+*.jpg
+*.jpeg
+
+# OpenSCAD temporary files
+*.scad~
+*.backup
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Compiled Python (if using SolidPython)
+__pycache__/
+*.py[cod]
+*.so
+
+# Logs
+*.log
