@@ -25,6 +25,7 @@ shell_base_radius = 70;  // intake_diameter/2 + 2.5mm rim = 67.5 + 2.5
 egress_x_dimension = 2.4;  // Dimension along X axis (wall thickness)
 egress_y_dimension = 93;   // Dimension along Y axis (height)
 egress_z_dimension = 30;   // Dimension along Z axis (width)
+egress_fillet_radius = 5;  // Corner fillet radius for smooth airflow
 
 // === INTERMEDIATE PARAMETERS ===
 intermediate_x_dimension = egress_z_dimension;
@@ -39,12 +40,18 @@ egress_y = (fan_xy_dimension - egress_y_dimension) / 2;  // Y offset to align on
 egress_z = 95;       // Height above bottom of base
 
 // === HULL DISTRIBUTION PARAMETERS ===
+// First hull: base to intermediate
 base_hull_profile_count = 11;        // Number of intermediate profiles in first hull segment
 base_hull_spacing_factor = 1.0;      // Cosine acceleration factor (>1.0 = more aggressive)
 base_fillet_radius = 70;             // Fillet radius at base (circular)
 terminus_fillet_radius = 10;         // Fillet radius at intermediate terminus
 terminus_left_extension_factor = 0.20;  // Left edge extension as fraction of terminus max X dimension
 terminus_y_offset = 15;              // Y-axis offset at terminus (dimension along Y axis)
+
+// Second hull: intermediate to egress
+egress_hull_profile_count = 11;      // Number of intermediate profiles in second hull segment
+egress_hull_spacing_factor = 1.0;    // Cosine acceleration factor (>1.0 = more aggressive, higher frequency at bottom)
+egress_rotation_accel_factor = 1.2;  // Rotation acceleration factor (1.0 = standard, >1.0 = more acceleration)
 
 // Egress orientation (perpendicular to base = rotated 90° around Y axis)
 egress_rotation = 90;  // Degrees around Y axis
@@ -197,13 +204,18 @@ module hull_intermediate_to_egress() {
     }
 }
 
-// Solid egress end piece (rectangular) - positioned at outer surface of egress frame (closest to Z axis)
+// Solid egress end piece (rounded rectangle) - positioned at outer surface of egress frame (closest to Z axis)
 module shell_egress() {
     color("orange", 0.7)
     // Position at outer surface (closest to Z axis/base) with overlap
     translate([egress_x - egress_x_dimension/2 + overlap, egress_y, egress_z])
         rotate([0, egress_rotation, 0])
-        cube([egress_z_dimension, egress_y_dimension, egress_x_dimension + overlap], center=true);
+        linear_extrude(height=egress_x_dimension + overlap, center=true) {
+            // Rounded rectangle using offset
+            offset(r=egress_fillet_radius)
+            offset(r=-egress_fillet_radius)
+            square([egress_z_dimension, egress_y_dimension], center=true);
+        }
 }
 
 // Complete solid shell - union of hull segments
@@ -252,7 +264,6 @@ module guides() {
 // === ASSEMBLY ===
 base_plate();
 shell_solid();
-egress_frame();  // Keep for reference
 guides();
 
 // === NOTES ===
